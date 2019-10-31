@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Movies.Core.Entities;
+using Movies.Core.Projections;
 using Movies.Core.Repositories;
 using Movies.Infrastructure.Data;
 using System;
@@ -25,7 +26,8 @@ namespace Movies.Infrastructure.Repositories
 
         public async Task<IList<Movie>> SearchMoviesAsync(string title, int? yearOfRelease, string[] genres)
         {
-            return await moviesDbContext.Movies
+            return await moviesDbContext
+                .Movies
                 .Where(x =>
                     (string.IsNullOrWhiteSpace(title) || x.Title.Contains(title))
                     && (!yearOfRelease.HasValue || x.YearOfRelease == yearOfRelease.Value)
@@ -35,9 +37,24 @@ namespace Movies.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public Task<IList<Movie>> TopNMoviesAsync(int? userId = null, int n = 5)
+        public async Task<IList<MovieWithAverageRating>> TopNMoviesAsync(int? userId = null, int n = 5)
         {
-            throw new NotImplementedException();
+            return await moviesDbContext
+                .Movies
+                .Include(x => x.Ratings)
+                .Select(x => new MovieWithAverageRating
+                {
+                    MovieId = x.MovieId,
+                    Title = x.Title,
+                    YearOfRelease = x.YearOfRelease,
+                    RunningTime = x.RunningTime,
+                    Genre = x.Genre,
+                    AverageRating = x.Ratings.Any() ? x.Ratings.Average(y => y.Rating) : 0d
+                })
+                .OrderByDescending(x => x.AverageRating)
+                .ThenBy(x => x.Title)
+                .Take(n)
+                .ToListAsync();            
         }
     }
 }

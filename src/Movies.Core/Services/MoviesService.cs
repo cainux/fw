@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Movies.Core.Entities;
 using Movies.Core.Exceptions;
+using Movies.Core.Projections;
 using Movies.Core.Repositories;
 
 namespace Movies.Core.Services
@@ -50,7 +51,7 @@ namespace Movies.Core.Services
             return movieRepository.SearchMoviesAsync(title, yearOfRelease, genres);
         }
 
-        public Task<IList<Movie>> TopNMoviesAsync(int? userId = null, int n = 5)
+        public Task<IList<MovieWithAverageRating>> TopNMoviesAsync(int? userId = null, int n = 5)
         {
             return movieRepository.TopNMoviesAsync(userId, n);
         }
