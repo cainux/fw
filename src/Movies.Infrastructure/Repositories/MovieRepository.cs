@@ -19,9 +19,11 @@ namespace Movies.Infrastructure.Repositories
             this.moviesDbContext = moviesDbContext;
         }
 
-        public Task<Movie> Get(int movieId)
+        public async Task<Movie> Get(int movieId)
         {
-            throw new NotImplementedException();
+            return await moviesDbContext
+                .Movies
+                .SingleOrDefaultAsync(x => x.MovieId == movieId);
         }
 
         public async Task<IList<Movie>> SearchMoviesAsync(string title, int? yearOfRelease, string[] genres)

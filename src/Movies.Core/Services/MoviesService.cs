@@ -22,7 +22,7 @@ namespace Movies.Core.Services
 
         public async Task<MovieRating> RateMovieAsync(int movieId, int userId, int rating)
         {
-            if (rating < 0 || rating > 5)
+            if (rating < 1 || rating > 5)
                 throw new InvalidRatingException(rating);
 
             var movieGetter = movieRepository.Get(movieId);
