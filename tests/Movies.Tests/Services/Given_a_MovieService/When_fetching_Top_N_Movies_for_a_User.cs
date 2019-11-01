@@ -6,11 +6,11 @@ using Xunit;
 
 namespace Movies.Tests.Services.Given_a_MovieService
 {
-    public class When_fetching_Top_5_Movies : Given_a_MovieService
+    public class When_fetching_Top_N_Movies_for_a_User : Given_a_MovieService
     {
-        private readonly IList<MovieWithAverageRating> actual;
+        private readonly IList<MovieWithRating> actual;
 
-        public When_fetching_Top_5_Movies()
+        public When_fetching_Top_N_Movies_for_a_User()
         {
             // Arrange
             var dbc = GetMoviesDbContext();
@@ -59,13 +59,15 @@ namespace Movies.Tests.Services.Given_a_MovieService
                 new MovieRating { MovieId = 6, UserId = 1, Rating = 2 },
 
                 // Movie 7 - 1
-                new MovieRating { MovieId = 7, UserId = 4, Rating = 1 }
+                new MovieRating { MovieId = 7, UserId = 1, Rating = 1 }
             });
 
             dbc.SaveChanges();
 
+            var userId = 1;
+
             // Act
-            actual = SUT.TopNMoviesAsync().Result;
+            actual = SUT.TopNMoviesAsync(userId, 5).Result;
         }
 
         [Fact]
@@ -73,11 +75,11 @@ namespace Movies.Tests.Services.Given_a_MovieService
         {
             actual.Should().HaveCount(5);
             actual.Should().BeEquivalentTo(
-                new { Title = "Movie_01", AverageRating = 5.0d },
-                new { Title = "Movie_02", AverageRating = 4.5d },
-                new { Title = "Movie_04", AverageRating = 2.5d },
-                new { Title = "Movie_06", AverageRating = 2.0d },
-                new { Title = "Movie_07", AverageRating = 1.0d }
+                new { Title = "Movie_01", Rating = 5.0d },
+                new { Title = "Movie_02", Rating = 5.0d },
+                new { Title = "Movie_04", Rating = 4.0d },
+                new { Title = "Movie_06", Rating = 2.0d },
+                new { Title = "Movie_07", Rating = 1.0d }
             );
         }
     }

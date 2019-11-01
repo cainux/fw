@@ -20,22 +20,21 @@ namespace Movies.Core.Services
             this.movieRatingRepository = movieRatingRepository;
         }
 
-        public Task<MovieRating> RateMovieAsync(int movieId, int userId, int rating)
+        public async Task<MovieRating> RateMovieAsync(int movieId, int userId, int rating)
         {
             if (rating < 0 || rating > 5)
                 throw new InvalidRatingException(rating);
 
-            var movie = movieRepository.Get(movieId);
+            var movieGetter = movieRepository.Get(movieId);
+            var userGetter = userRepository.Get(userId);
 
-            if (movie == null)
+            if (await movieGetter == null)
                 throw new MovieNotFoundException(movieId);
 
-            var user = userRepository.Get(userId);
-
-            if (user == null)
+            if (await userGetter == null)
                 throw new UserNotFoundException(userId);
 
-            return movieRatingRepository.Upsert(new MovieRating
+            return await movieRatingRepository.Upsert(new MovieRating
             {
                 MovieId = movieId,
                 UserId = userId,
@@ -43,17 +42,25 @@ namespace Movies.Core.Services
             });
         }
 
-        public Task<IList<Movie>> SearchMoviesAsync(string title, int? yearOfRelease, string[] genres)
+        public async Task<IList<Movie>> SearchMoviesAsync(string title, int? yearOfRelease, string[] genres)
         {
             if (string.IsNullOrWhiteSpace(title) && yearOfRelease == null && (genres == null || genres.Length == 0))
                 throw new EmptySearchCriteriaException();
 
-            return movieRepository.SearchMoviesAsync(title, yearOfRelease, genres);
+            return await movieRepository.SearchMoviesAsync(title, yearOfRelease, genres);
         }
 
-        public Task<IList<MovieWithAverageRating>> TopNMoviesAsync(int? userId = null, int n = 5)
+        public async Task<IList<MovieWithRating>> TopNMoviesAsync(int? userId = null, int n = 5)
         {
-            return movieRepository.TopNMoviesAsync(userId, n);
+            if (userId.HasValue)
+            {
+                if (await userRepository.Get(userId.Value) == null)
+                    throw new UserNotFoundException(userId.Value);
+                else
+                    return await movieRepository.TopNMoviesAsync(userId.Value, n);
+            }
+ 
+            return await movieRepository.TopNMoviesAsync(n);
         }
     }
 }

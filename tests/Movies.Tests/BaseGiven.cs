@@ -16,6 +16,7 @@ namespace Movies.Tests
             Mocker = new AutoMocker();
             Mocker.Use(GetMoviesDbContext());
             Mocker.Use<IMovieRepository>(Mocker.CreateInstance<MovieRepository>());
+            Mocker.Use<IUserRepository>(Mocker.CreateInstance<UserRepository>());
         }
 
         protected MoviesDbContext GetMoviesDbContext()

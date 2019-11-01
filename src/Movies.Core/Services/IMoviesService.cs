@@ -12,6 +12,6 @@ namespace Movies.Core.Services
 
         // Queries
         Task<IList<Movie>> SearchMoviesAsync(string title, int? yearOfRelease, string[] genres);
-        Task<IList<MovieWithAverageRating>> TopNMoviesAsync(int? userId = null, int n = 5);
+        Task<IList<MovieWithRating>> TopNMoviesAsync(int? userId = null, int n = 5);
     }
 }

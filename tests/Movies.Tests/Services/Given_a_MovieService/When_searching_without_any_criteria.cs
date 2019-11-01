@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Movies.Core.Exceptions;
+using System;
 using Xunit;
 
 namespace Movies.Tests.Services.Given_a_MovieService
@@ -13,11 +14,11 @@ namespace Movies.Tests.Services.Given_a_MovieService
             // Act
             try
             {
-                SUT.SearchMoviesAsync(null, null, null);
+                _ = SUT.SearchMoviesAsync(null, null, null).Result;
             }
-            catch (EmptySearchCriteriaException e)
+            catch (AggregateException e) // This is a bit fishy
             {
-                actual = e;
+                actual = (EmptySearchCriteriaException) e.InnerException;
             }
         }
 

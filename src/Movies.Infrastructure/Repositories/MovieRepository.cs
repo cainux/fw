@@ -37,24 +37,45 @@ namespace Movies.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IList<MovieWithAverageRating>> TopNMoviesAsync(int? userId = null, int n = 5)
+        public async Task<IList<MovieWithRating>> TopNMoviesAsync(int n = 5)
         {
             return await moviesDbContext
                 .Movies
                 .Include(x => x.Ratings)
-                .Select(x => new MovieWithAverageRating
+                .Select(x => new MovieWithRating
                 {
                     MovieId = x.MovieId,
                     Title = x.Title,
                     YearOfRelease = x.YearOfRelease,
                     RunningTime = x.RunningTime,
                     Genre = x.Genre,
-                    AverageRating = x.Ratings.Any() ? x.Ratings.Average(y => y.Rating) : 0d
+                    Rating = x.Ratings.Any() ? x.Ratings.Average(y => y.Rating) : 0d
                 })
-                .OrderByDescending(x => x.AverageRating)
+                .OrderByDescending(x => x.Rating)
                 .ThenBy(x => x.Title)
                 .Take(n)
-                .ToListAsync();            
+                .ToListAsync();
+        }
+
+        public async Task<IList<MovieWithRating>> TopNMoviesAsync(int userId, int n = 5)
+        {
+            return await moviesDbContext
+                .MovieRatings
+                .Include(x => x.Movie)
+                .Where(x => x.UserId == userId)
+                .Select(x => new MovieWithRating
+                {
+                    MovieId = x.Movie.MovieId,
+                    Title = x.Movie.Title,
+                    YearOfRelease = x.Movie.YearOfRelease,
+                    RunningTime = x.Movie.RunningTime,
+                    Genre = x.Movie.Genre,
+                    Rating = x.Rating
+                })
+                .OrderByDescending(x => x.Rating)
+                .ThenBy(x => x.Title)
+                .Take(n)
+                .ToListAsync();
         }
     }
 }

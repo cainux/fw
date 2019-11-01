@@ -9,6 +9,7 @@ namespace Movies.Core.Repositories
     {
         Task<Movie> Get(int movieId);
         Task<IList<Movie>> SearchMoviesAsync(string title, int? yearOfRelease, string[] genres);
-        Task<IList<MovieWithAverageRating>> TopNMoviesAsync(int? userId = null, int n = 5);
+        Task<IList<MovieWithRating>> TopNMoviesAsync(int n = 5);
+        Task<IList<MovieWithRating>> TopNMoviesAsync(int userId, int n = 5);
     }
 }
