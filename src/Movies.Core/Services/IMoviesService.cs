@@ -8,7 +8,7 @@ namespace Movies.Core.Services
     public interface IMoviesService
     {
         // Commands
-        Task<MovieRating> RateMovieAsync(int movieId, int userId, int rating);
+        Task<int> RateMovieAsync(int movieId, int userId, int rating);
 
         // Queries
         Task<IList<Movie>> SearchMoviesAsync(string title, int? yearOfRelease, string[] genres);

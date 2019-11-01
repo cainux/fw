@@ -7,7 +7,7 @@ namespace Movies.Tests.Services.Given_a_MovieService
 {
     public class When_rating_a_Movie_with_a_valid_Rating : Given_a_MovieService
     {
-        private readonly MovieRating actual;
+        private readonly int actual;
 
         public When_rating_a_Movie_with_a_valid_Rating()
         {
@@ -24,14 +24,9 @@ namespace Movies.Tests.Services.Given_a_MovieService
         }
 
         [Fact]
-        public void Then_the_rating_should_be_returned()
+        public void Then_1_row_should_have_been_saved()
         {
-            actual.Should().BeEquivalentTo(new
-            {
-                MovieId = 1,
-                UserId = 1,
-                Rating = 5
-            });
+            actual.Should().Be(1);
         }
 
         [Fact]

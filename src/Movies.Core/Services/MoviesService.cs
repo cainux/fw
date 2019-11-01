@@ -20,7 +20,7 @@ namespace Movies.Core.Services
             this.movieRatingRepository = movieRatingRepository;
         }
 
-        public async Task<MovieRating> RateMovieAsync(int movieId, int userId, int rating)
+        public async Task<int> RateMovieAsync(int movieId, int userId, int rating)
         {
             if (rating < 1 || rating > 5)
                 throw new InvalidRatingException(rating);

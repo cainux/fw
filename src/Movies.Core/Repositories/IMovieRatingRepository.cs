@@ -5,7 +5,6 @@ namespace Movies.Core.Repositories
 {
     public interface IMovieRatingRepository
     {
-        Task<MovieRating> Get(int movieId, int userId);
-        Task<MovieRating> Upsert(MovieRating value);
+        Task<int> Upsert(MovieRating value);
     }
 }
