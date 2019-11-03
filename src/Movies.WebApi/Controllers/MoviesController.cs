@@ -33,7 +33,7 @@ namespace Movies.WebApi.Controllers
             return await moviesService.TopNMoviesAsync(userId, 5);
         }
 
-        [HttpPost]
+        [HttpPost("ratemovie")]
         public async Task<int> RateMovie(int movieId, int userId, int rating)
         {
             // TODO: Add try/catch for error codes
