@@ -1,0 +1,14 @@
+﻿{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "Movies.WebApi": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "movies/top5",
+      "applicationUrl": "http://localhost:5000",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
