@@ -1,10 +1,15 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Movies.Core.Entities;
 
 namespace Movies.Core.Repositories
 {
     public interface IMovieRatingRepository
     {
-        Task<int> Upsert(MovieRating value);
+        // Command
+        Task<int> UpsertAsync(MovieRating value);
+
+        // Queries
+        Task<IList<MovieRating>> GetByMovieId(int movieId);
     }
 }

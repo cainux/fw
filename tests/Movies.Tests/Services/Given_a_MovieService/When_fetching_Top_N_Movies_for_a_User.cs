@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using Movies.Core.Entities;
-using Movies.Core.Projections;
 using System.Collections.Generic;
 using Xunit;
 
@@ -8,7 +7,7 @@ namespace Movies.Tests.Services.Given_a_MovieService
 {
     public class When_fetching_Top_N_Movies_for_a_User : Given_a_MovieService
     {
-        private readonly IList<MovieWithRating> actual;
+        private readonly IList<Movie> actual;
 
         public When_fetching_Top_N_Movies_for_a_User()
         {

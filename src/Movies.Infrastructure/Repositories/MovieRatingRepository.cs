@@ -2,6 +2,8 @@
 using Movies.Core.Entities;
 using Movies.Core.Repositories;
 using Movies.Infrastructure.Data;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Movies.Infrastructure.Repositories
@@ -15,7 +17,7 @@ namespace Movies.Infrastructure.Repositories
             this.moviesDbContext = moviesDbContext;
         }
 
-        public async Task<int> Upsert(MovieRating value)
+        public async Task<int> UpsertAsync(MovieRating value)
         {
             var existingMovieRating = await moviesDbContext
                 .MovieRatings
@@ -33,6 +35,14 @@ namespace Movies.Infrastructure.Repositories
             }
 
             return await moviesDbContext.SaveChangesAsync();
+        }
+
+        public async Task<IList<MovieRating>> GetByMovieId(int movieId)
+        {
+            return await moviesDbContext
+                .MovieRatings
+                .Where(x => x.MovieId == movieId)
+                .ToListAsync();
         }
     }
 }

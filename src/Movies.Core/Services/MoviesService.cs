@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Movies.Core.Entities;
 using Movies.Core.Exceptions;
-using Movies.Core.Projections;
 using Movies.Core.Repositories;
+using Movies.Core.Util;
 
 namespace Movies.Core.Services
 {
@@ -34,12 +35,17 @@ namespace Movies.Core.Services
             if (await userGetter == null)
                 throw new UserNotFoundException(userId);
 
-            return await movieRatingRepository.Upsert(new MovieRating
+            var ratingSavedResult = await movieRatingRepository.UpsertAsync(new MovieRating
             {
                 MovieId = movieId,
                 UserId = userId,
                 Rating = rating
             });
+
+            var ratings = await movieRatingRepository.GetByMovieId(movieId);
+            var roundedAverageRating = Rounder.Round(ratings.Average(x => x.Rating));
+
+            return await movieRepository.UpdateAverageRating(movieId, roundedAverageRating);
         }
 
         public async Task<IList<Movie>> SearchMoviesAsync(string title, int? yearOfRelease, string[] genres)
@@ -50,7 +56,7 @@ namespace Movies.Core.Services
             return await movieRepository.SearchMoviesAsync(title, yearOfRelease, genres);
         }
 
-        public async Task<IList<MovieWithRating>> TopNMoviesAsync(int? userId = null, int n = 5)
+        public async Task<IList<Movie>> TopNMoviesAsync(int? userId = null, int n = 5)
         {
             if (userId.HasValue)
             {

@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +18,7 @@ namespace Movies.WebApi
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
             services.AddDbContext<MoviesDbContext>(DbContextOptionsBuilder);
             services.AddTransient<IMoviesService, MoviesService>();

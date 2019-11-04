@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Movies.Core.Exceptions;
 using Movies.Core.Services;
 using Movies.WebApi.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Movies.WebApi.Controllers
@@ -12,10 +14,12 @@ namespace Movies.WebApi.Controllers
     public class MoviesController : ControllerBase
     {
         private readonly IMoviesService moviesService;
+        private readonly IMapper mapper;
 
-        public MoviesController(IMoviesService moviesService)
+        public MoviesController(IMoviesService moviesService, IMapper mapper)
         {
             this.moviesService = moviesService;
+            this.mapper = mapper;
         }
 
         [HttpGet("search")]
@@ -27,7 +31,7 @@ namespace Movies.WebApi.Controllers
 
                 if (result.Count > 0)
                 {
-                    return Ok(result);
+                    return Ok(mapper.Map<IList<MovieViewModel>>(result));
                 }
                 else
                 {
@@ -47,7 +51,7 @@ namespace Movies.WebApi.Controllers
             {
                 var result = await moviesService.TopNMoviesAsync(userId, 5);
 
-                return Ok(result);
+                return Ok(mapper.Map<IList<MovieViewModel>>(result));
             }
             catch (UserNotFoundException e)
             {

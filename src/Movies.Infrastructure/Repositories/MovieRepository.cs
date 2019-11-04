@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Movies.Core.Entities;
-using Movies.Core.Projections;
 using Movies.Core.Repositories;
 using Movies.Infrastructure.Data;
 using System;
@@ -17,6 +16,19 @@ namespace Movies.Infrastructure.Repositories
         public MovieRepository(MoviesDbContext moviesDbContext)
         {
             this.moviesDbContext = moviesDbContext;
+        }
+
+        public async Task<int> UpdateAverageRating(int movieId, double avgRating)
+        {
+            var movie = await moviesDbContext
+                .Movies
+                .SingleAsync(x => x.Id == movieId);
+
+            movie.AverageRating = avgRating;
+
+            moviesDbContext.Movies.Update(movie);
+
+            return await moviesDbContext.SaveChangesAsync();
         }
 
         public async Task<Movie> Get(int movieId)
@@ -39,42 +51,32 @@ namespace Movies.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IList<MovieWithRating>> TopNMoviesAsync(int n = 5)
+        public async Task<IList<Movie>> TopNMoviesAsync(int n = 5)
         {
             return await moviesDbContext
                 .Movies
-                .Include(x => x.Ratings)
-                .Select(x => new MovieWithRating
-                {
-                    MovieId = x.Id,
-                    Title = x.Title,
-                    YearOfRelease = x.YearOfRelease,
-                    RunningTime = x.RunningTime,
-                    Genre = x.Genre,
-                    Rating = x.Ratings.Any() ? x.Ratings.Average(y => y.Rating) : 0d
-                })
-                .OrderByDescending(x => x.Rating)
+                .OrderByDescending(x => x.AverageRating)
                 .ThenBy(x => x.Title)
                 .Take(n)
                 .ToListAsync();
         }
 
-        public async Task<IList<MovieWithRating>> TopNMoviesAsync(int userId, int n = 5)
+        public async Task<IList<Movie>> TopNMoviesAsync(int userId, int n = 5)
         {
             return await moviesDbContext
                 .MovieRatings
                 .Include(x => x.Movie)
                 .Where(x => x.UserId == userId)
-                .Select(x => new MovieWithRating
+                .Select(x => new Movie
                 {
-                    MovieId = x.Movie.Id,
+                    Id = x.Movie.Id,
                     Title = x.Movie.Title,
                     YearOfRelease = x.Movie.YearOfRelease,
                     RunningTime = x.Movie.RunningTime,
                     Genre = x.Movie.Genre,
-                    Rating = x.Rating
+                    AverageRating = x.Rating
                 })
-                .OrderByDescending(x => x.Rating)
+                .OrderByDescending(x => x.AverageRating)
                 .ThenBy(x => x.Title)
                 .Take(n)
                 .ToListAsync();
