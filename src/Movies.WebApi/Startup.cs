@@ -14,7 +14,6 @@ namespace Movies.WebApi
     {
         protected virtual void DbContextOptionsBuilder(DbContextOptionsBuilder options)
             => options.UseInMemoryDatabase(GetType().FullName);
-        
 
         public void ConfigureServices(IServiceCollection services)
         {

@@ -59,6 +59,13 @@ namespace Movies.WebApi
                     new Movie { Title = "Superbad", Genre = "Comedy", YearOfRelease = 2007, RunningTime = 113 }
                 });
 
+                dbc.Users.AddRange(new[]
+                {
+                    new User { Username = "Cain" },
+                    new User { Username = "Yin" },
+                    new User { Username = "Tilly" },
+                    new User { Username = "Ally" },
+                });
 
                 dbc.SaveChanges();
             }

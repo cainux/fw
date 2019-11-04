@@ -28,7 +28,8 @@ namespace Movies.Infrastructure.Repositories
             }
             else
             {
-                moviesDbContext.MovieRatings.Update(value);
+                existingMovieRating.Rating = value.Rating;
+                moviesDbContext.MovieRatings.Update(existingMovieRating);
             }
 
             return await moviesDbContext.SaveChangesAsync();

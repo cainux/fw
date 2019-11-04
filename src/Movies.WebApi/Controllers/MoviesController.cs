@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Movies.Core.Entities;
-using Movies.Core.Projections;
+using Movies.Core.Exceptions;
 using Movies.Core.Services;
-using System.Collections.Generic;
+using Movies.WebApi.ViewModels;
+using System;
 using System.Threading.Tasks;
 
 namespace Movies.WebApi.Controllers
@@ -19,25 +19,59 @@ namespace Movies.WebApi.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<IEnumerable<Movie>> Search([FromQuery] string title, [FromQuery] int? yearOfRelease, [FromQuery] string[] genres)
+        public async Task<IActionResult> Search([FromQuery] string title, [FromQuery] int? yearOfRelease, [FromQuery] string[] genres)
         {
-            // TODO: Add try/catch for error codes
-            // TODO: This should return the movies with average rating!
-            return await moviesService.SearchMoviesAsync(title, yearOfRelease, genres);
+            try
+            {
+                var result = await moviesService.SearchMoviesAsync(title, yearOfRelease, genres);
+
+                if (result.Count > 0)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (EmptySearchCriteriaException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpGet("top5")]
-        public async Task<IEnumerable<MovieWithRating>> Top5([FromQuery] int? userId)
+        public async Task<IActionResult> Top5([FromQuery] int? userId)
         {
-            // TODO: try/catches for error codes
-            return await moviesService.TopNMoviesAsync(userId, 5);
+            try
+            {
+                var result = await moviesService.TopNMoviesAsync(userId, 5);
+
+                return Ok(result);
+            }
+            catch (UserNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
         [HttpPost("ratemovie")]
-        public async Task<int> RateMovie(int movieId, int userId, int rating)
+        public async Task<IActionResult> RateMovie([FromBody] MovieRatingViewModel value)
         {
-            // TODO: Add try/catch for error codes
-            return await moviesService.RateMovieAsync(movieId, userId, rating);
+            try
+            {
+                var results = await moviesService.RateMovieAsync(value.MovieId, value.UserId, value.Rating);
+
+                return Ok(results);
+            }
+            catch (InvalidRatingException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch (Exception e) when (e is MovieNotFoundException || e is UserNotFoundException)
+            {
+                return NotFound(e.Message);
+            }
         }
     }
 }
