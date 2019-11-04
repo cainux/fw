@@ -4,7 +4,7 @@ namespace Movies.Core.Entities
 {
     public class Movie
     {
-        public int MovieId { get; set; }
+        public int Id { get; set; }
         public string Title { get; set; }
         public int YearOfRelease { get; set; }
         public int RunningTime { get; set; }

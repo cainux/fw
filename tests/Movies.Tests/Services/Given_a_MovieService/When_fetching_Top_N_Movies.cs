@@ -28,13 +28,13 @@ namespace Movies.Tests.Services.Given_a_MovieService
 
             dbc.Movies.AddRange(new[]
             {
-                new Movie { MovieId = 1, Title = "Movie_01" },
-                new Movie { MovieId = 2, Title = "Movie_02" },
-                new Movie { MovieId = 3, Title = "Movie_03" },
-                new Movie { MovieId = 4, Title = "Movie_04" },
-                new Movie { MovieId = 5, Title = "Movie_05" },
-                new Movie { MovieId = 6, Title = "Movie_06" },
-                new Movie { MovieId = 7, Title = "Movie_07" }
+                new Movie { Id = 1, Title = "Movie_01" },
+                new Movie { Id = 2, Title = "Movie_02" },
+                new Movie { Id = 3, Title = "Movie_03" },
+                new Movie { Id = 4, Title = "Movie_04" },
+                new Movie { Id = 5, Title = "Movie_05" },
+                new Movie { Id = 6, Title = "Movie_06" },
+                new Movie { Id = 7, Title = "Movie_07" }
             });
 
             dbc.MovieRatings.AddRange(new[]

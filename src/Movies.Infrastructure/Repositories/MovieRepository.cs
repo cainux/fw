@@ -23,7 +23,7 @@ namespace Movies.Infrastructure.Repositories
         {
             return await moviesDbContext
                 .Movies
-                .SingleOrDefaultAsync(x => x.MovieId == movieId);
+                .SingleOrDefaultAsync(x => x.Id == movieId);
         }
 
         public async Task<IList<Movie>> SearchMoviesAsync(string title, int? yearOfRelease, string[] genres)
@@ -46,7 +46,7 @@ namespace Movies.Infrastructure.Repositories
                 .Include(x => x.Ratings)
                 .Select(x => new MovieWithRating
                 {
-                    MovieId = x.MovieId,
+                    MovieId = x.Id,
                     Title = x.Title,
                     YearOfRelease = x.YearOfRelease,
                     RunningTime = x.RunningTime,
@@ -67,7 +67,7 @@ namespace Movies.Infrastructure.Repositories
                 .Where(x => x.UserId == userId)
                 .Select(x => new MovieWithRating
                 {
-                    MovieId = x.Movie.MovieId,
+                    MovieId = x.Movie.Id,
                     Title = x.Movie.Title,
                     YearOfRelease = x.Movie.YearOfRelease,
                     RunningTime = x.Movie.RunningTime,

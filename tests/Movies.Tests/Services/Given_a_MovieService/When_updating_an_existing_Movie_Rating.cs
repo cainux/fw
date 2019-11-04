@@ -15,7 +15,7 @@ namespace Movies.Tests.Services.Given_a_MovieService
             var dbc = GetMoviesDbContext();
 
             dbc.Users.Add(new User { UserId = 1, Username = "User_01" });
-            dbc.Movies.Add(new Movie { MovieId = 1, Title = "Movie_01" });
+            dbc.Movies.Add(new Movie { Id = 1, Title = "Movie_01" });
             dbc.MovieRatings.Add(new MovieRating { MovieId = 1, UserId = 1, Rating = 5 });
 
             dbc.SaveChanges();
