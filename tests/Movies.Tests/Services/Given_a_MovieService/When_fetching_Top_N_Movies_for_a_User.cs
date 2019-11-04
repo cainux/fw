@@ -74,11 +74,11 @@ namespace Movies.Tests.Services.Given_a_MovieService
         {
             actual.Should().HaveCount(5);
             actual.Should().BeEquivalentTo(
-                new { Title = "Movie_01", Rating = 5.0d },
-                new { Title = "Movie_02", Rating = 5.0d },
-                new { Title = "Movie_04", Rating = 4.0d },
-                new { Title = "Movie_06", Rating = 2.0d },
-                new { Title = "Movie_07", Rating = 1.0d }
+                new { Title = "Movie_01", AverageRating = 5.0d },
+                new { Title = "Movie_02", AverageRating = 5.0d },
+                new { Title = "Movie_04", AverageRating = 4.0d },
+                new { Title = "Movie_06", AverageRating = 2.0d },
+                new { Title = "Movie_07", AverageRating = 1.0d }
             );
         }
     }
