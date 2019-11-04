@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using Movies.Core.Repositories;
 using Movies.Core.Services;
 using Movies.Infrastructure.Data;
@@ -25,6 +26,10 @@ namespace Movies.WebApi
             services.AddTransient<IMovieRepository, MovieRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IMovieRatingRepository, MovieRatingRepository>();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Movies API", Version = "v1" });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -33,6 +38,13 @@ namespace Movies.WebApi
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Movies API V1");
+                c.RoutePrefix = string.Empty;
+            });
 
             app.UseRouting();
 
