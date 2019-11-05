@@ -3,8 +3,8 @@
   "profiles": {
     "Movies.WebApi": {
       "commandName": "Project",
-      "launchBrowser": false,
-      "launchUrl": "movies/top5",
+      "launchBrowser": true,
+      "launchUrl": "",
       "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

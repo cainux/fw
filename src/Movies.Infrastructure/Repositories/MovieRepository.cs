@@ -43,9 +43,9 @@ namespace Movies.Infrastructure.Repositories
             return await moviesDbContext
                 .Movies
                 .Where(x =>
-                    (string.IsNullOrWhiteSpace(title) || x.Title.ToLower().Contains(title.ToLower()))
+                    (string.IsNullOrWhiteSpace(title) || x.Title.ToLowerInvariant().Contains(title.ToLowerInvariant()))
                     && (!yearOfRelease.HasValue || x.YearOfRelease == yearOfRelease.Value)
-                    && ((genres == null || genres.Length == 0) || genres.Select(x => x.ToLower()).Contains(x.Genre.ToLower()))
+                    && ((genres == null || genres.Length == 0) || genres.Select(x => x.ToLowerInvariant()).Contains(x.Genre.ToLowerInvariant()))
                 )
                 .OrderBy(x => x.Title)
                 .ToListAsync();
